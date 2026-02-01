@@ -145,6 +145,43 @@ body {
   display: flex;
   gap: 1.5rem;
   align-items: flex-start;
+  min-width: 0;
+}
+
+.main-images {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.ref-panel {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 560px;
+  background: var(--surface);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ref-panel .placeholder {
+  padding: 2rem;
+}
+
+.ref-panel img {
+  max-width: 100%;
+  max-height: 85vh;
+  display: block;
+  object-fit: contain;
+  user-select: none;
+}
+
+.ref-panel img.hidden {
+  display: none;
 }
 
 .canvas-wrap {
@@ -152,6 +189,7 @@ body {
   flex: 1;
   cursor: crosshair;
   min-height: 560px;
+  min-width: 0;
   background: var(--surface);
   border-radius: 10px;
   overflow: hidden;

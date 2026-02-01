@@ -1,4 +1,7 @@
 (function () {
+  const refImageInput = document.getElementById('refImageInput');
+  const refImageEl = document.getElementById('refImage');
+  const refPlaceholder = document.getElementById('refPlaceholder');
   const imageInput = document.getElementById('imageInput');
   const imageEl = document.getElementById('image');
   const overlay = document.getElementById('overlay');
@@ -227,6 +230,18 @@
       y: clientY - rect.top
     };
   }
+
+  refImageInput.addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    refImageEl.onload = function () {
+      URL.revokeObjectURL(url);
+      refImageEl.classList.remove('hidden');
+      refPlaceholder.classList.add('hidden');
+    };
+    refImageEl.src = url;
+  });
 
   imageInput.addEventListener('change', function (e) {
     const file = e.target.files[0];

@@ -15,8 +15,12 @@
 
     <div class="toolbar">
       <label class="upload-btn">
+        <input type="file" id="refImageInput" accept="image/*" hidden>
+        参考图像(左)
+      </label>
+      <label class="upload-btn">
         <input type="file" id="imageInput" accept="image/*" hidden>
-        加载字符图像
+        标记图像(右)
       </label>
       <div class="grid-config">
         <label>行数：</label>
@@ -51,12 +55,18 @@
     </div>
 
     <main class="main">
-      <div class="canvas-wrap" id="canvasWrap">
-        <div class="placeholder" id="placeholder">
-          <span>请先加载一张行列结构的字符图像</span>
+      <div class="main-images">
+        <div class="ref-panel" id="refPanel">
+          <div class="placeholder" id="refPlaceholder">请选择参考图像(左)</div>
+          <img id="refImage" alt="参考图像" class="hidden">
         </div>
-        <img id="image" alt="字符图像" class="hidden">
-        <canvas id="overlay"></canvas>
+        <div class="canvas-wrap" id="canvasWrap">
+          <div class="placeholder" id="placeholder">
+            <span>请选择标记图像(右)</span>
+          </div>
+          <img id="image" alt="标记图像" class="hidden">
+          <canvas id="overlay"></canvas>
+        </div>
       </div>
 
       <aside class="sidebar">
