@@ -20,13 +20,13 @@
       </label>
       <div class="grid-config">
         <label>行数：</label>
-        <input type="number" id="rowsInput" min="1" value="4">
+        <input type="number" id="rowsInput" min="1" value="10">
         <label>列数：</label>
-        <input type="number" id="colsInput" min="1" value="5">
+        <input type="number" id="colsInput" min="1" value="8">
         <label>格子宽(px)：</label>
-        <input type="number" id="cellWidthInput" min="0" placeholder="自动">
+        <input type="number" id="cellWidthInput" min="0" value="48" placeholder="自动">
         <label>格子高(px)：</label>
-        <input type="number" id="cellHeightInput" min="0" placeholder="自动">
+        <input type="number" id="cellHeightInput" min="0" value="48" placeholder="自动">
       </div>
       <div class="align-mode">
         <span class="align-label">对齐标定：</span>
@@ -36,10 +36,11 @@
         <button type="button" id="resetAlign" class="btn btn-secondary">重置对齐</button>
       </div>
       <div class="ground-truth-config">
-        <label>真实 False 位置（每行一个 行,列）：</label>
-        <textarea id="groundTruthInput" rows="2" placeholder="0,1&#10;1,2&#10;2,3"></textarea>
+        <label>真实标签(txt)：</label>
+        <input type="file" id="groundTruthFileInput" accept=".txt" hidden>
+        <label class="upload-btn upload-btn-small" for="groundTruthFileInput">选择 txt</label>
+        <span id="groundTruthFileName" class="file-name"></span>
       </div>
-      <button type="button" id="submitBtn" class="btn btn-primary">提交</button>
       <button type="button" id="saveBtn" class="btn btn-primary">保存标注图像</button>
       <button type="button" id="clearAll" class="btn btn-secondary">清空选择</button>
     </div>

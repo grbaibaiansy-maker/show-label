@@ -9,8 +9,8 @@
   const colsInput = document.getElementById('colsInput');
   const cellWidthInput = document.getElementById('cellWidthInput');
   const cellHeightInput = document.getElementById('cellHeightInput');
-  const groundTruthInput = document.getElementById('groundTruthInput');
-  const submitBtn = document.getElementById('submitBtn');
+  const groundTruthFileInput = document.getElementById('groundTruthFileInput');
+  const groundTruthFileName = document.getElementById('groundTruthFileName');
   const saveBtn = document.getElementById('saveBtn');
   const clearAllBtn = document.getElementById('clearAll');
   const modeSelectBtn = document.getElementById('modeSelect');
@@ -175,17 +175,15 @@
     }
   }
 
-  function parseGroundTruth() {
-    const raw = groundTruthInput.value.trim();
-    if (!raw) return [];
+  function parseGroundTruthFromText(raw) {
     const list = [];
-    raw.split(/[\n;]+/).forEach(line => {
-      const part = line.trim().split(/[,\s]+/);
-      if (part.length >= 2) {
-        const row = parseInt(part[0], 10);
-        const col = parseInt(part[1], 10);
-        if (!isNaN(row) && !isNaN(col)) list.push([row, col]);
-      }
+    const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    lines.forEach((line, row) => {
+      const parts = line.split(/[\s,]+/).filter(Boolean);
+      parts.forEach((val, col) => {
+        const v = val.toLowerCase();
+        if (v === '0' || v === 'false' || v === 'f') list.push([row, col]);
+      });
     });
     return list;
   }
@@ -341,10 +339,18 @@
     else redrawOverlay();
   });
 
-  submitBtn.addEventListener('click', function () {
-    groundTruthFalse = parseGroundTruth();
-    submitted = true;
-    redrawOverlay();
+  groundTruthFileInput.addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    groundTruthFileName.textContent = file.name;
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      const raw = (ev.target && ev.target.result) || '';
+      groundTruthFalse = parseGroundTruthFromText(raw);
+      submitted = true;
+      redrawOverlay();
+    };
+    reader.readAsText(file, 'UTF-8');
   });
 
   saveBtn.addEventListener('click', function () {

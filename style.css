@@ -271,22 +271,18 @@ body {
   color: var(--text);
 }
 
-.ground-truth-config {
-  flex-direction: column;
-  align-items: flex-start;
+.ground-truth-config .upload-btn-small {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.9rem;
 }
 
-.ground-truth-config textarea {
-  width: 100%;
-  min-width: 180px;
-  padding: 0.5rem 0.75rem;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-  font-family: inherit;
-  font-size: 0.9rem;
-  resize: vertical;
+.ground-truth-config .file-name {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .legend {
