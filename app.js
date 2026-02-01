@@ -24,7 +24,7 @@
   let submitted = false;
   let gridOffsetX = 0, gridOffsetY = 0;
   let imageOffsetX = 0, imageOffsetY = 0;
-  let mode = 'select';
+  let mode = 'dragGrid';
   let isDragging = false;
   let dragStartX = 0, dragStartY = 0;
   let dragStartGridX = 0, dragStartGridY = 0;
@@ -34,10 +34,12 @@
   function getImageRect() {
     const wrap = canvasWrap.getBoundingClientRect();
     const img = imageEl;
-    const naturalW = img.naturalWidth;
-    const naturalH = img.naturalHeight;
-    const maxW = wrap.width;
-    const maxH = wrap.height;
+    const naturalW = img.naturalWidth || 1;
+    const naturalH = img.naturalHeight || 1;
+    let maxW = wrap.width;
+    let maxH = wrap.height;
+    if (maxW <= 0) maxW = naturalW;
+    if (maxH <= 0) maxH = naturalH;
     let w = naturalW, h = naturalH;
     if (w > maxW || h > maxH) {
       const r = Math.min(maxW / w, maxH / h);
@@ -211,10 +213,11 @@
 
   function setMode(m) {
     mode = m;
-    modeSelectBtn.classList.toggle('active', m === 'select');
     modeDragGridBtn.classList.toggle('active', m === 'dragGrid');
     modeDragImageBtn.classList.toggle('active', m === 'dragImage');
+    modeSelectBtn.classList.toggle('active', m === 'select');
     canvasWrap.classList.toggle('align-drag', m === 'dragGrid' || m === 'dragImage');
+    
   }
 
   function getOverlayCoords(clientX, clientY) {
@@ -244,6 +247,11 @@
       imageOffsetY = 0;
       renderCellList();
       syncOverlaySize();
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          syncOverlaySize();
+        });
+      });
     };
     imageEl.src = url;
   });
@@ -326,9 +334,10 @@
     isDragging = false;
   });
 
-  modeSelectBtn.addEventListener('click', function () { setMode('select'); });
   modeDragGridBtn.addEventListener('click', function () { setMode('dragGrid'); });
   modeDragImageBtn.addEventListener('click', function () { setMode('dragImage'); });
+  modeSelectBtn.addEventListener('click', function () { setMode('select'); });
+  setMode('dragGrid');
 
   resetAlignBtn.addEventListener('click', function () {
     gridOffsetX = 0;
