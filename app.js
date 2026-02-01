@@ -15,6 +15,7 @@
   const groundTruthFileInput = document.getElementById('groundTruthFileInput');
   const groundTruthFileName = document.getElementById('groundTruthFileName');
   const saveBtn = document.getElementById('saveBtn');
+  const saveLabelBtn = document.getElementById('saveLabelBtn');
   const clearAllBtn = document.getElementById('clearAll');
   const modeSelectBtn = document.getElementById('modeSelect');
   const modeDragGridBtn = document.getElementById('modeDragGrid');
@@ -171,13 +172,22 @@
     if (submitted && groundTruthFalse.length > 0) {
       groundTruthFalse.forEach(([r, c]) => {
         const cell = getCellRect(r, c);
-        ctx.strokeStyle = '#9ece6a';
-        ctx.lineWidth = 3;
-        ctx.strokeRect(cell.x, cell.y, cell.w, cell.h);
         ctx.fillStyle = 'rgba(158, 206, 106, 0.5)';
         ctx.fillRect(cell.x, cell.y, cell.w, cell.h);
       });
     }
+  }
+
+  function getUserLabelMatrixText() {
+    const lines = [];
+    for (let r = 0; r < rows; r++) {
+      const vals = [];
+      for (let c = 0; c < cols; c++) {
+        vals.push(userSelected.has(`${r},${c}`) ? '0' : '1');
+      }
+      lines.push(vals.join(' '));
+    }
+    return lines.join('\n');
   }
 
   function parseGroundTruthFromText(raw) {
@@ -392,6 +402,17 @@
     link.download = 'annotated-' + Date.now() + '.png';
     link.href = out.toDataURL('image/png');
     link.click();
+  });
+
+  saveLabelBtn.addEventListener('click', function () {
+    const txt = getUserLabelMatrixText();
+    const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = 'labels-' + Date.now() + '.txt';
+    link.href = url;
+    link.click();
+    URL.revokeObjectURL(url);
   });
 
   clearAllBtn.addEventListener('click', function () {
