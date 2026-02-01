@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>字符网格标注与对照</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>字符网格标注与对照</h1>
+      <p class="subtitle">定义行列网格 → 拖动网格/图像对齐标定 → 逐字选择（False）→ 提交后与真实标签绿框对照</p>
+    </header>
+
+    <div class="toolbar">
+      <label class="upload-btn">
+        <input type="file" id="imageInput" accept="image/*" hidden>
+        加载字符图像
+      </label>
+      <div class="grid-config">
+        <label>行数：</label>
+        <input type="number" id="rowsInput" min="1" value="4">
+        <label>列数：</label>
+        <input type="number" id="colsInput" min="1" value="5">
+        <label>格子宽(px)：</label>
+        <input type="number" id="cellWidthInput" min="0" placeholder="自动">
+        <label>格子高(px)：</label>
+        <input type="number" id="cellHeightInput" min="0" placeholder="自动">
+      </div>
+      <div class="align-mode">
+        <span class="align-label">对齐标定：</span>
+        <button type="button" id="modeSelect" class="btn btn-mode active">选择字符</button>
+        <button type="button" id="modeDragGrid" class="btn btn-mode">拖动网格</button>
+        <button type="button" id="modeDragImage" class="btn btn-mode">拖动图像</button>
+        <button type="button" id="resetAlign" class="btn btn-secondary">重置对齐</button>
+      </div>
+      <div class="ground-truth-config">
+        <label>真实 False 位置（每行一个 行,列）：</label>
+        <textarea id="groundTruthInput" rows="2" placeholder="0,1&#10;1,2&#10;2,3"></textarea>
+      </div>
+      <button type="button" id="submitBtn" class="btn btn-primary">提交</button>
+      <button type="button" id="saveBtn" class="btn btn-primary">保存标注图像</button>
+      <button type="button" id="clearAll" class="btn btn-secondary">清空选择</button>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item"><i class="box red"></i> 用户标注 (False)</span>
+      <span class="legend-item"><i class="box green"></i> 真实 False 位置</span>
+    </div>
+
+    <main class="main">
+      <div class="canvas-wrap" id="canvasWrap">
+        <div class="placeholder" id="placeholder">
+          <span>请先加载一张行列结构的字符图像</span>
+        </div>
+        <img id="image" alt="字符图像" class="hidden">
+        <canvas id="overlay"></canvas>
+      </div>
+
+      <aside class="sidebar">
+        <h3>已选字符（行, 列）</h3>
+        <p class="sidebar-hint">点击图像上的格子可逐字选择/取消，标签统一为 False</p>
+        <ul id="cellList" class="cell-list"></ul>
+      </aside>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
