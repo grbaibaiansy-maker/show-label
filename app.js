@@ -21,6 +21,8 @@
   const modeDragGridBtn = document.getElementById('modeDragGrid');
   const modeDragImageBtn = document.getElementById('modeDragImage');
   const resetAlignBtn = document.getElementById('resetAlign');
+  const calcAccuracyBtn = document.getElementById('calcAccuracyBtn');
+  const accuracyEl = document.getElementById('accuracy');
 
   let rows = 4, cols = 5;
   let userSelected = new Set();
@@ -202,6 +204,37 @@
     });
     return list;
   }
+  function computeFalseAccuracy() {
+    if (!groundTruthFalse || groundTruthFalse.length === 0) return null;
+  
+    let totalFalse = groundTruthFalse.length;
+    let correctFalse = 0;
+  
+    groundTruthFalse.forEach(([r, c]) => {
+      if (userSelected.has(`${r},${c}`)) {
+        correctFalse += 1;
+      }
+    });
+  
+    return correctFalse / totalFalse;
+  }
+
+  function computeFalseAccuracy() {
+    if (!groundTruthFalse || groundTruthFalse.length === 0) return null;
+
+    let totalFalse = groundTruthFalse.length;
+    let correctFalse = 0;
+
+    groundTruthFalse.forEach(([r, c]) => {
+      const key = `${r},${c}`;
+      // 约定：用户未选中 = 1，选中 = 0
+      if (userSelected.has(key)) {
+        correctFalse += 1;
+      }
+    });
+
+    return correctFalse / totalFalse;
+  }
 
   function renderCellList() {
     const entries = Array.from(userSelected).sort((a, b) => {
@@ -219,9 +252,24 @@
         userSelected.delete(key);
         renderCellList();
         redrawOverlay();
+        updateAccuracyDisplay();
       });
       cellList.appendChild(li);
     });
+  }
+
+  function updateAccuracyDisplay() {
+    if (!accuracyEl) return;
+    if (!submitted) {
+      accuracyEl.textContent = 'False 准确率：--';
+      return;
+    }
+    const acc = computeFalseAccuracy();
+    if (acc === null) {
+      accuracyEl.textContent = 'False 准确率：--';
+    } else {
+      accuracyEl.textContent = `False 准确率：${(acc * 100).toFixed(2)}%`;
+    }
   }
 
   function setMode(m) {
@@ -335,6 +383,7 @@
     else userSelected.add(key);
     renderCellList();
     redrawOverlay();
+    updateAccuracyDisplay();
   });
 
   window.addEventListener('mousemove', function (e) {
@@ -383,6 +432,7 @@
       groundTruthFalse = parseGroundTruthFromText(raw);
       submitted = true;
       redrawOverlay();
+      updateAccuracyDisplay();
     };
     reader.readAsText(file, 'UTF-8');
   });
@@ -420,5 +470,15 @@
     submitted = false;
     renderCellList();
     redrawOverlay();
+    updateAccuracyDisplay();
   });
+
+  calcAccuracyBtn.addEventListener('click', function () {
+    if (!submitted) {
+      alert('请先加载真实标签(txt)');
+      return;
+    }
+    updateAccuracyDisplay();
+  });
+
 })();
